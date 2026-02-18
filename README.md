@@ -8,7 +8,21 @@ This is only a beginner project and is not fully usasble as your primary passwor
 
 How to run:
 ensure you have git and g++ from https://www.msys2.org/ for windows installed and configured to your environment variables path accordingly.
+You may need to run the following under msys2 ucrt64 terminal to set up gcc, g++, sqllite3 and openssl
 
+standard g++ toolchain
+```
+pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
+```
+Add to environment path (default : C:\msys64\ucrt64\bin)
+
+sqllite3 and openssl
+```
+pacman -S mingw-w64-ucrt-x86_64-sqlite3
+pacman -S mingw-w64-ucrt-x86_64-openssl
+
+```
+for downloading 
 ```
 git clone https://github.com/raks4/simple_password_manager.git
 cd simple_password_manager
