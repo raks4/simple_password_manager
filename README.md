@@ -10,13 +10,13 @@ How to run:
 ensure you have git and g++ from https://www.msys2.org/ for windows installed and configured to your environment variables path accordingly.
 You may need to run the following under msys2 ucrt64 terminal to set up gcc, g++, sqllite3 and openssl
 
-standard g++ toolchain
+standard g++ toolchain (run in msys2 ucrt64 terminal)
 ```
 pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
 ```
 Add to environment path (default : C:\msys64\ucrt64\bin)
 
-sqllite3 and openssl
+sqllite3 and openssl (run in msys2 ucrt64 terminal)
 ```
 pacman -S mingw-w64-ucrt-x86_64-sqlite3
 pacman -S mingw-w64-ucrt-x86_64-openssl
