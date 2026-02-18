@@ -13,4 +13,5 @@ ensure you have git and g++ from https://www.msys2.org/ for windows installed an
 git clone https://github.com/raks4/simple_password_manager.git
 cd simple_password_manager
 g++ *.cpp -lsqlite3 -lssl -lcrypto -std=c++17 -o pm
+./pm
 ```
