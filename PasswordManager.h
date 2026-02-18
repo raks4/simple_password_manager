@@ -8,4 +8,7 @@ private:
 public:
     PasswordManager();
     void run();
+    void searchCredential();
+    void deleteCredential();
+
 };

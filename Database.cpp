@@ -93,38 +93,40 @@ std::vector<Credential> Database::getAllCredentials() {
     return creds;
 }
 
-void Database::deleteCredential(int id) {
-    std::string sql = "DELETE FROM credentials WHERE id = ?;";
+std::vector<std::tuple<int, std::string, std::string, std::string>>
+Database::searchCredential(const std::string& website) {
+
+    std::vector<std::tuple<int, std::string, std::string, std::string>> results;
+
+    std::string sql = "SELECT id, website, username, password FROM credentials WHERE website LIKE ?;";
     sqlite3_stmt* stmt;
 
-    sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
-    sqlite3_bind_int(stmt, 1, id);
-    sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-}
-
-std::vector<Credential> Database::searchByWebsite(const std::string& website) {
-    std::vector<Credential> results;
-
-    std::string sql =
-        "SELECT id, website, username, password "
-        "FROM credentials WHERE website LIKE ?;";
-
-    sqlite3_stmt* stmt;
     sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
 
     std::string pattern = "%" + website + "%";
     sqlite3_bind_text(stmt, 1, pattern.c_str(), -1, SQLITE_STATIC);
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        Credential c;
-        c.id = sqlite3_column_int(stmt, 0);
-        c.website = (char*)sqlite3_column_text(stmt, 1);
-        c.username = (char*)sqlite3_column_text(stmt, 2);
-        c.password = (char*)sqlite3_column_text(stmt, 3);
-        results.push_back(c);
+        int id = sqlite3_column_int(stmt, 0);
+        std::string site = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        std::string user = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+        std::string pass = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+
+        results.push_back({id, site, user, pass});
     }
 
     sqlite3_finalize(stmt);
     return results;
+}
+
+void Database::deleteCredential(int id) {
+
+    std::string sql = "DELETE FROM credentials WHERE id = ?;";
+    sqlite3_stmt* stmt;
+
+    sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, id);
+
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }

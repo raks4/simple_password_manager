@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sqlite3.h>
+#include <tuple>
 
 struct Credential {
     int id;
@@ -26,6 +27,7 @@ public:
     void storeMasterHash(const std::string& hash);
     std::string getMasterHash();
     void deleteCredential(int id);
-    std::vector<Credential> searchByWebsite(const std::string& website);
+    std::vector<std::tuple<int, std::string, std::string, std::string>>
+    searchCredential(const std::string& website);
 
 };

@@ -31,12 +31,50 @@ void PasswordManager::authenticate() {
     }
 }
 
+void PasswordManager::searchCredential() {
+
+    std::string website;
+    std::cout << "Enter website to search: ";
+    std::cin >> website;
+
+    auto results = db.searchCredential(website);
+
+    if (results.empty()) {
+        std::cout << "No matching credentials found.\n";
+        return;
+    }
+
+    for (const auto& row : results) {
+        int id;
+        std::string site, user, encryptedPass;
+
+        std::tie(id, site, user, encryptedPass) = row;
+
+        std::string decryptedPass = Crypto::decryptAES(encryptedPass, encryptionKey);
+
+        std::cout << id << " | " << site << " | "
+                  << user << " | " << decryptedPass << "\n";
+    }
+}
+
+void PasswordManager::deleteCredential() {
+
+    int id;
+    std::cout << "Enter credential ID to delete: ";
+    std::cin >> id;
+
+    db.deleteCredential(id);
+
+    std::cout << "Credential deleted (if ID existed).\n";
+}
+
+
 
 void PasswordManager::run() {
     int choice;
 
     do {
-        std::cout << "\n1. Add Credential\n2. View All\n3. Generate Password\n4. Exit\nChoice: ";
+        std::cout << "\n1. Add Credential\n2. View All\n3. Generate Password\n4. Search Credential\n5. Delete Credential\n6. Exit\nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) {
@@ -73,5 +111,13 @@ void PasswordManager::run() {
                       << Generator::generatePassword(len) << "\n";
         }
 
-    } while (choice != 4);
+        else if (choice == 4) {
+            searchCredential();
+        }
+
+        else if (choice == 5) {
+            deleteCredential();
+        }
+
+    } while (choice != 6);
 }
